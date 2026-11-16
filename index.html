@@ -145,7 +145,7 @@ const RIVALS=[["First guest",3],["Cogsworth",10],["Oren",24],["Fenwick",32],["As
 const FAMS=["warriors","beasts","robots","fairies","undead","fishes","trees","dragons"];
 const VERS=["Before (11 Nov)","Rebalance (15 Nov)","Now (16 Nov)"];
 const byId={};
-CARDS.forEach(c=>{byId[c.id]=c;c.v.push([c.r,c.c,c.a,c.h]);c.isNew=!c.v[0];c.changed=c.isNew||JSON.stringify(c.v[0])!==JSON.stringify(c.v[2])||c.e[0]!==c.e[2]||c.pw[0]!==c.pw[2];const parts=c.x.split("\n\n");c.fx=(parts.length>1?parts.slice(1).join("\n\n"):c.x).trim()});
+CARDS.forEach(c=>{byId[c.id]=c;c.v.push([c.r,c.c,c.a,c.h]);c.isNew=!c.v[0];c.changed=c.isNew||JSON.stringify(c.v[0])!==JSON.stringify(c.v[2])||c.e[0]!==c.e[2]||c.pw[0]!==c.pw[2];const parts=c.x.split("\n\n");c.fx=(parts.length>1?parts.slice(1).join("\n\n"):c.x).split("\n").filter(l=>!l.startsWith("ATTACK · At your turn-end action")).join("\n").replace(/\n{3,}/g,"\n\n").trim()});
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const el=(t,cls,txt)=>{const e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
 const sprites={};
@@ -176,14 +176,14 @@ function renderGrid(){
   SORTED.forEach(c=>{
     if(state.fam!=="all"&&c.d!==state.fam)return;if(state.rar!=="all"&&c.r!==state.rar)return;
     if(state.changed&&!c.changed)return;if(state.isNew&&!c.isNew)return;
-    if(state.q&&!(c.n.toLowerCase().includes(state.q)||c.x.toLowerCase().includes(state.q)))return;
+    if(state.q&&!(c.n.toLowerCase().includes(state.q)||c.fx.toLowerCase().includes(state.q)))return;
     n++;const t=el("div","tile");t.style.setProperty("--c","var(--"+c.r+")");t.tabIndex=0;t.setAttribute("role","button");t.setAttribute("aria-label",c.n+", open details");
     t.onclick=()=>openCard(c);t.onkeydown=e=>{if(e.target===t&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openCard(c)}};
     const b=el("div","tbody");b.append(el("div","nm",c.n));
     const tg=el("div","tags");tg.append(el("span","pill",RN[c.r]),el("span","tag",cap(c.d)));if(c.isNew)tg.append(el("span","tag new","New"));else if(c.changed)tg.append(el("span","tag","Changed"));b.append(tg);
     const m=el("div","meta");const add1=(l,v)=>{const s=el("span","",l+" ");s.append(el("b","",v));m.append(s)};
     m.append(el("b","",costText(c)));if(c.t==="unit"){add1("Attack",c.a);add1("Health",c.h)}else m.append(el("span","",cap(c.t)));b.append(m);
-    b.append(el("div","fx",c.fx));
+    if(c.fx)b.append(el("div","fx",c.fx));
     t.append(art(c),b);
     if(counts[c.id])t.append(el("span","cnt","×"+counts[c.id]));
     const a=el("button","add","+");a.title="Add to pretend deck";a.setAttribute("aria-label","Add "+c.n+" to pretend deck");a.onclick=e=>{e.stopPropagation();add(c.id)};t.append(a);
@@ -234,7 +234,7 @@ function openCard(c){
   info.append(top,sub);
   const ad=el("button","pri","+ Add to pretend deck");ad.onclick=()=>{add(c.id);ad.textContent=msg||("In deck: "+deck.filter(i=>i===c.id).length+" · add another")};const wr=el("div");wr.append(ad);info.append(wr);
   h.append(ar,info);w.append(h);
-  w.append(el("h3","","Effect"),el("div","effect",c.fx));
+  w.append(el("h3","","Effect"),c.fx?el("div","effect",c.fx):el("div","note","No special effect: it only attacks."));
   if(c.s!=null){w.append(el("h3","","Measured strength"));const lo=-15,hi=30,pos=v=>Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100))+"%";const tr=el("div","track");const g=el("i","goal");g.style.left=pos(PTS[c.r]);const n=el("i","now");n.style.left=pos(c.s);tr.append(g,n);w.append(tr);const diff=c.s-PTS[c.r];w.append(el("div","note","Measured "+(c.s>0?"+":"")+c.s.toFixed(1)+" (hollow dot) against a target of +"+PTS[c.r]+" for "+RN[c.r]+" (filled dot). "+(Math.abs(diff)<5?"On target.":diff>0?"Stronger than its rarity says.":"Weaker than its rarity says.")))}
   w.append(el("h3","","What changed"));
   if(c.isNew)w.append(el("div","note","New card, added in the 15 November rebalance."));
