@@ -39,6 +39,7 @@ function showRoster() {
   for (const id of ids) {
     const card = byId[id];
     const button = el("button", "roster-card");
+    button.append(art(card));
     button.append(el("strong", "", roster.cards[id] + " × " + card.n));
     const stats = entry.group === "Lessons" && (entry.name.endsWith("First lesson") || entry.name === "Practice table") && id === "rabbit"
       ? "1 attack · 1 health (practice)" : card.a + " attack · " + card.h + " health";
