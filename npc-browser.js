@@ -1,6 +1,11 @@
 const levelSelect = document.getElementById("level");
 const groupSelect = document.getElementById("group");
 const opponentSelect = document.getElementById("opponent");
+const stageControl = document.getElementById("stage-control");
+const stageSelect = document.getElementById("story-stage");
+const stageLabels = {intro: "First guest", cogsworth: "Cogsworth", oren: "Oren", fenwick: "Expedition", aster: "Aster", rowan: "Chapter two", bramble_garden: "After Rowan", last_game: "After the garden"};
+for (const [value, label] of Object.entries(stageLabels)) stageSelect.add(new Option(label, value));
+stageSelect.value = "last_game";
 for (const level of ["easy", "medium", "hard", "impossible"]) {
   levelSelect.add(new Option(cap(level), level));
 }
@@ -21,7 +26,13 @@ function showOpponents() {
 
 function showRoster() {
   const entry = ENCOUNTERS[opponentSelect.value];
-  const roster = entry.levels[levelSelect.value];
+  stageControl.hidden = !entry.stages;
+  if (entry.stages) {
+    for (const option of stageSelect.options) option.disabled = !entry.stages[option.value];
+    if (!entry.stages[stageSelect.value]) stageSelect.value = Object.keys(stageLabels).find(stage => entry.stages[stage]);
+  }
+  const levels = entry.stages ? entry.stages[stageSelect.value] : entry.levels;
+  const roster = levels[levelSelect.value];
   const total = Object.values(roster.cards).reduce((sum, copies) => sum + copies, 0);
   const host = document.getElementById("roster");
   host.replaceChildren(el("h2", "", entry.name));
@@ -29,6 +40,7 @@ function showRoster() {
     cap(levelSelect.value), FAMILY_NAMES[entry.family] || "Mixed families",
     total + " cards", roster.hand + " in opening hand"
   ].join(" · ")));
+  if (entry.stages) host.append(el("p", "note", "Deck preview at this point in the story. Each guest has their own requirement for accepting a challenge."));
   if (roster.board.length) {
     host.append(el("p", "note", "Already on the table: " +
       roster.board.map(([lane, id]) => byId[id].n + " in lane " + lane).join(", ") + "."));
@@ -63,6 +75,7 @@ function showView() {
   }
 }
 
+stageSelect.onchange = showRoster;
 levelSelect.onchange = showRoster;
 groupSelect.onchange = showOpponents;
 opponentSelect.onchange = showRoster;
