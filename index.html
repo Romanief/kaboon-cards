@@ -321,6 +321,36 @@ function art(card){
   return image;
 }
 const effectText=c=>c.fx || (c.a===0?"Blocks its lane and can be sacrificed.":"Attacks the opposing unit, or the rival if its lane is clear.");
+// Rules text sometimes uses a token's short name or a plural.
+const referenceIds = new Map(CARDS.map(card => [card.n, card.id]));
+for (const [name, id] of Object.entries({
+  Remains: "remnant", Cubs: "cub", "Polished Bones": "bone",
+  Summer: "yggra_summer", Autumn: "yggra_autumn"
+})) referenceIds.set(name, id);
+const referenceNames = [...referenceIds.keys()].sort((a, b) => b.length - a.length);
+const referencePattern = new RegExp("\\b(?:" + referenceNames.map(name =>
+  name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")\\b", "g");
+
+function cardEffect(card, className) {
+  const content = el("div", className);
+  const text = effectText(card);
+  let offset = 0;
+  for (const match of text.matchAll(referencePattern)) {
+    const word = match[0];
+    const target = byId[referenceIds.get(word)];
+    // Heralds draw from the Knights family. Their text names a family, not a specific card.
+    if (target === card || (word === "Knight" && ["herald", "crownherald"].includes(card.id))) continue;
+    content.append(text.slice(offset, match.index));
+    const link = el("button", "card-reference", word);
+    link.setAttribute("aria-label", "View " + target.n);
+    link.setAttribute("aria-haspopup", "dialog");
+    link.onclick = () => openCard(target, card);
+    content.append(link);
+    offset = match.index + word.length;
+  }
+  content.append(text.slice(offset));
+  return content;
+}
 const costText=c=>c.c===0?"Free":"Sacrifice "+c.c;
 let deck=[];try{deck=(JSON.parse(localStorage.getItem("kaboonDeck"))||[]).filter(id=>byId[id]&&!byId[id].tok)}catch(e){}
 const save=()=>{try{localStorage.setItem("kaboonDeck",JSON.stringify(deck))}catch(e){}};
@@ -355,9 +385,9 @@ function renderGrid(){
     const tg=el("div","tags");tg.append(el("span","pill",RN[c.r]),el("span","tag",FAMILY_NAMES[c.d]));b.append(tg);
     const m=el("div","meta");const add1=(l,v)=>{const s=el("span","",l+" ");s.append(el("b","",v));m.append(s)};
     m.append(el("b","",costText(c)));if(c.t==="unit"){add1("Attack",c.a);add1("Health",c.h)}else m.append(el("span","",cap(c.t)));b.append(m);
-    b.append(el("div","fx",effectText(c)));
+
     if(scope==="starter")b.append(el("b","note",copies+" × in family deck"));
-    detail.append(art(c),b);t.append(detail);
+    detail.append(art(c),b);t.append(detail,cardEffect(c,"fx"));
     if(counts[c.id])t.append(el("span","cnt","×"+counts[c.id]));
     const a=el("button","add","+");a.title="Add to my deck";a.setAttribute("aria-label","Add "+c.n+" to my deck");a.onclick=e=>{e.stopPropagation();add(c.id)};if(!c.tok)t.append(a);
     g.append(t)});
@@ -381,16 +411,27 @@ function renderDeck(){
   const dl=el("div","dl");const seen={};deck.forEach(i=>seen[i]=(seen[i]||0)+1);
   Object.keys(seen).map(i=>byId[i]).sort((x,y)=>x.c-y.c||x.n.localeCompare(y.n)).forEach(c=>{const b=el("button");b.style.setProperty("--c","var(--"+c.r+")");b.append(el("span","",seen[c.id]+"× "+c.n),el("span","note",(c.c===0?"Free":"Sac "+c.c)+(c.t==="unit"?" · "+c.a+"/"+c.h:"")));b.setAttribute("aria-label","Remove one "+c.n);b.onclick=()=>remove(c.id);dl.append(b)});a.append(dl);
 }
-function openCard(c){
+let cardTrail = [];
+function openCard(c, source){
+  const dialog = document.getElementById("dlg");
+  if (!dialog.open) cardTrail = [];
+  if (source) cardTrail.push(source);
   const d=document.getElementById("dlg");d.textContent="";const w=el("div","dlg");w.style.setProperty("--c","var(--"+c.r+")");
   const h=el("div","dhead");const ar=art(c);
   const info=el("div","info");const top=el("div","chips");const title=el("h2","",c.n);title.id="card-name";top.append(title);const x=el("button","x","Close");x.onclick=()=>d.close();top.append(x);
   const sub=el("div","chips");sub.append(el("span","pill",RN[c.r]),el("span","note",FAMILY_NAMES[c.d]+" · "+cap(c.t)+" · "+costText(c)+(c.t==="unit"?" · Attack "+c.a+" · Health "+c.h:"")));
+  if (cardTrail.length) {
+    const previous = cardTrail[cardTrail.length - 1];
+    const back = el("button","x","← Back to " + previous.n);
+    back.onclick = () => openCard(cardTrail.pop());
+    info.append(back);
+  }
   info.append(top,sub);
   const ad=el("button","pri","+ Add to my deck");ad.onclick=()=>{add(c.id);ad.textContent=msg||("In deck: "+deck.filter(i=>i===c.id).length+" · add another")};const wr=el("div");wr.append(ad);if(!c.tok)info.append(wr);
   h.append(ar,info);w.append(h);
-  w.append(el("h3","","Effect"),el("div","effect",effectText(c)));
-  d.append(w);d.showModal();
+  w.append(el("h3","","Effect"),cardEffect(c,"effect"));
+  d.append(w);if (!d.open) d.showModal();
+  title.tabIndex=-1;title.focus({preventScroll:true});d.scrollTop=0;
 }
 document.getElementById("dlg").addEventListener("click",e=>{if(e.target.id==="dlg")e.target.close()});
 document.getElementById("scope").onchange=renderGrid;

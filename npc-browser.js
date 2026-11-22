@@ -38,15 +38,17 @@ function showRoster() {
     byId[a].c - byId[b].c || byId[a].n.localeCompare(byId[b].n));
   for (const id of ids) {
     const card = byId[id];
-    const button = el("button", "roster-card");
+    const tile = el("div", "roster-card");
+    const button = el("button", "face roster-face");
     button.append(art(card));
     button.append(el("strong", "", roster.cards[id] + " × " + card.n));
     const stats = entry.group === "Lessons" && (entry.name.endsWith("First lesson") || entry.name === "Practice table") && id === "rabbit"
       ? "1 attack · 1 health (practice)" : card.a + " attack · " + card.h + " health";
     button.append(el("span", "note", costText(card) + " · " + (card.t === "unit" ? stats : cap(card.t))));
-    button.append(el("span", "", effectText(card)));
+
     button.onclick = () => openCard(card);
-    list.append(button);
+    tile.append(button, cardEffect(card, "fx"));
+    list.append(tile);
   }
   host.append(list);
 }

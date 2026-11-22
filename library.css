@@ -67,3 +67,9 @@ dialog::backdrop{background:#342b32a8}
   nav{background:#463b40}nav a[aria-current],.dbar,.pri{color:#3f2530}
   .chip[aria-pressed=true]{color:#e1eed7}
 }
+.tile .face,.roster-face{height:auto}
+.tile>.fx,.roster-card>.fx{padding:0 7px 8px}
+.roster-face{gap:7px}
+.roster-face>strong,.roster-face>.note{margin-inline:7px}
+.card-reference{font:inherit;color:var(--berry);background:transparent;border:0;margin:0;padding:0;text-decoration:underline;text-underline-offset:.16em;text-decoration-thickness:.08em}
+.card-reference:hover{text-decoration-thickness:.15em}
