@@ -340,6 +340,12 @@ const FAMS=["warriors","beasts","robots","fairies","undead","fishes","trees","dr
 const byId=Object.fromEntries(CARDS.map(card=>[card.id,card]));
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const el=(t,cls,txt)=>{const e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
+function rarityLabel(card) {
+  const label = el("span", "pill", RN[card.r]);
+  label.style.setProperty("--c", "var(--" + card.r + ")");
+  return label;
+}
+
 function art(card){
   const image=new Image();
   image.className="art";
@@ -412,7 +418,7 @@ function renderGrid(){
     n++;const t=el("div","tile");t.style.setProperty("--c","var(--"+c.r+")");
     const detail=el("button","face");detail.setAttribute("aria-label","View "+c.n);detail.onclick=()=>openCard(c);
     const b=el("div","tbody");b.append(el("div","nm",c.n));
-    const tg=el("div","tags");tg.append(el("span","pill",RN[c.r]),el("span","tag",FAMILY_NAMES[c.d]));b.append(tg);
+    const tg=el("div","tags");tg.append(rarityLabel(c),el("span","tag",FAMILY_NAMES[c.d]));b.append(tg);
     const m=el("div","meta");const add1=(l,v)=>{const s=el("span","",l+" ");s.append(el("b","",v));m.append(s)};
     m.append(el("b","",costText(c)));if(c.t==="unit"){add1("Attack",c.a);add1("Health",c.h)}else m.append(el("span","",cap(c.t)));b.append(m);
 
@@ -439,7 +445,7 @@ function renderDeck(){
   if(cs.length<15)a.append(el("div","warn","Add "+(15-cs.length)+" more to reach the 15-card minimum."));
   a.append(el("h3","","Cards (tap to remove one)"));
   const dl=el("div","dl");const seen={};deck.forEach(i=>seen[i]=(seen[i]||0)+1);
-  Object.keys(seen).map(i=>byId[i]).sort((x,y)=>x.c-y.c||x.n.localeCompare(y.n)).forEach(c=>{const b=el("button");b.style.setProperty("--c","var(--"+c.r+")");b.append(el("span","",seen[c.id]+"× "+c.n),el("span","note",(c.c===0?"Free":"Sac "+c.c)+(c.t==="unit"?" · "+c.a+"/"+c.h:"")));b.setAttribute("aria-label","Remove one "+c.n);b.onclick=()=>remove(c.id);dl.append(b)});a.append(dl);
+  Object.keys(seen).map(i=>byId[i]).sort((x,y)=>x.c-y.c||x.n.localeCompare(y.n)).forEach(c=>{const b=el("button");b.style.setProperty("--c","var(--"+c.r+")");b.append(el("span","",seen[c.id]+"× "+c.n),rarityLabel(c),el("span","note",(c.c===0?"Free":"Sac "+c.c)+(c.t==="unit"?" · "+c.a+"/"+c.h:"")));b.setAttribute("aria-label","Remove one "+c.n);b.onclick=()=>remove(c.id);dl.append(b)});a.append(dl);
 }
 let cardTrail = [];
 function openCard(c, source){
@@ -449,7 +455,7 @@ function openCard(c, source){
   const d=document.getElementById("dlg");d.textContent="";const w=el("div","dlg");w.style.setProperty("--c","var(--"+c.r+")");
   const h=el("div","dhead");const ar=art(c);
   const info=el("div","info");const top=el("div","chips");const title=el("h2","",c.n);title.id="card-name";top.append(title);const x=el("button","x","Close");x.onclick=()=>d.close();top.append(x);
-  const sub=el("div","chips");sub.append(el("span","pill",RN[c.r]),el("span","note",FAMILY_NAMES[c.d]+" · "+cap(c.t)+" · "+costText(c)+(c.t==="unit"?" · Attack "+c.a+" · Health "+c.h:"")));
+  const sub=el("div","chips");sub.append(rarityLabel(c),el("span","note",FAMILY_NAMES[c.d]+" · "+cap(c.t)+" · "+costText(c)+(c.t==="unit"?" · Attack "+c.a+" · Health "+c.h:"")));
   if (cardTrail.length) {
     const previous = cardTrail[cardTrail.length - 1];
     const back = el("button","x","← Back to " + previous.n);
@@ -469,7 +475,7 @@ document.getElementById("scope").onchange=renderGrid;
 renderGrid();renderDeck();
 </script>
 <script src="encounters.js?v=20261124-5"></script>
-<script src="npc-browser.js?v=20261124-4"></script>
-<script src="journey.js?v=20261124-5"></script>
+<script src="npc-browser.js?v=20261124-6"></script>
+<script src="journey.js?v=20261124-6"></script>
 
 </body></html>

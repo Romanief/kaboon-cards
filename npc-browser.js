@@ -70,7 +70,9 @@ function showRoster() {
     button.append(el("strong", "", roster.cards[id] + " × " + card.n));
     const stats = entry.group === "Lessons" && (entry.name.endsWith("First lesson") || entry.name === "Practice table") && id === "rabbit"
       ? "1 attack · 1 health (practice)" : card.a + " attack · " + card.h + " health";
-    button.append(el("span", "note", costText(card) + " · " + (card.t === "unit" ? stats : cap(card.t))));
+    const details = el("span", "note");
+    details.append(rarityLabel(card), " · " + costText(card) + " · " + (card.t === "unit" ? stats : cap(card.t)));
+    button.append(details);
 
     button.onclick = () => openCard(card);
     tile.append(button, cardEffect(card, "fx"));

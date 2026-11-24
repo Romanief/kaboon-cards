@@ -65,7 +65,9 @@ const journeyAddCard = (() => {
       return button;
     }
     controls.append(step(-1), el("span","",qty + " ×"), step(1));
-    host.append(view, el("small","",costText(card) + " · " + metrics), controls);
+    const details = el("small");
+    details.append(rarityLabel(card), " · " + costText(card) + " · " + metrics);
+    host.append(view, details, controls);
     return host;
   }
   function renderContents() {
