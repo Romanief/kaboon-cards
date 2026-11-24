@@ -192,7 +192,7 @@ const journeyAddCard = (() => {
   };
   async function load() {
     try {
-      const response = await fetch("easy_progression.json?v=20261124-5");
+      const response = await fetch("easy_progression.json?v=20261124-7");
       if (!response.ok) throw Error(response.status);
       source = await response.json();
       for (const d of source.decks) {
