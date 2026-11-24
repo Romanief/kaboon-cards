@@ -6,8 +6,13 @@ const journeyAddCard = (() => {
   const stageKey = deck => deck.id.replace(/_(warriors|beasts|robots|fairies)$/, "");
   const feature = {cogsworth:"shieldprojector", oren:"commander", fenwick:"angler", aster:"moonarchivist",
     rowan:"oathmarshal", vesper:"banshee", alder:"appletree", bramble:"denmatron", final_bram:"dawnsquire"};
-  const illustration = d => art(byId[feature[d.id] || Object.keys(d.cards)[0]]);
-  const openings = new Map(ENCOUNTERS.filter(e => e.easyDeck).map(e => [e.easyDeck, e.levels.easy.hand]));
+  function illustration(deck) {
+    const cards = level === "easy" ? deck.cards : rosters.get(deck.id).medium.cards;
+    const featured = feature[deck.id];
+    return art(byId[cards[featured] ? featured : Object.keys(cards)[0]]);
+  }
+  const rosters = new Map(ENCOUNTERS.filter(e => e.easyDeck).map(e => [e.easyDeck, e.levels]));
+  let level = "easy";
   let source, selected, current = {}, drafts = new Map();
 
   function validCounts(value) {
@@ -48,7 +53,7 @@ const journeyAddCard = (() => {
     view.onclick = () => openCard(card);
     view.append(art(card), el("strong","",card.n));
     const metrics = card.t === "unit" ? card.a + " ATK · " + card.h + " HP" : cap(card.t);
-    const controls = el("div","j-step");
+    const controls = el("div",level === "easy" ? "j-step" : "");
     function step(delta) {
       const button = el("button","",delta < 0 ? "−" : "+");
       const action = delta < 0 ? "Remove" : "Add";
@@ -64,7 +69,9 @@ const journeyAddCard = (() => {
       };
       return button;
     }
-    controls.append(step(-1), el("span","",qty + " ×"), step(1));
+    const copies = el("span","",qty + " ×");
+    if (level === "easy") controls.append(step(-1), copies, step(1));
+    else controls.append(el("small", "", qty + (qty === 1 ? " copy" : " copies")));
     const details = el("small");
     details.append(rarityLabel(card), " · " + costText(card) + " · " + metrics);
     host.append(view, details, controls);
@@ -75,8 +82,8 @@ const journeyAddCard = (() => {
     let units = 0;
     for (const [id,qty] of Object.entries(current)) if (byId[id].t === "unit") units += qty;
     get("journey-total").textContent = count + " cards · " + units + " units · " + (count-units) +
-      " support · " + openings.get(selected.id) + " in opening hand" + (count < 10 ? " · Add " + (10-count) + " to export" : "");
-    get("journey-description").textContent = changed() ? "Original deck · " + selected.subtitle : selected.subtitle;
+      " support · " + rosters.get(selected.id)[level].hand + " in opening hand" + (count < 10 ? " · Add " + (10-count) + " to export" : "");
+    get("journey-description").textContent = level === "medium" ? "" : changed() ? "Original deck · " + selected.subtitle : selected.subtitle;
     get("restore-deck").disabled = !changed();
     get("journey-grid").replaceChildren(...Object.keys(current).map(id => tile(byId[id],false)));
   }
@@ -90,10 +97,17 @@ const journeyAddCard = (() => {
       [el("p","note","No matching cards.")]));
   }
   function select() {
-    if (!source || !location.hash.startsWith("#easy-mode")) return;
-    const playable = source.decks.filter(d => playableEasyDeck(d.id) === d.id);
-    selected = playable.find(d => d.id === playableEasyDeck(location.hash.split("/")[1])) || playable[0];
-    current = {...(drafts.get(selected.id) || selected.cards)};
+    const [section, id] = location.hash.slice(1).split("/");
+    if (!source || !["easy-mode", "medium-mode"].includes(section)) return;
+    const medium = section === "medium-mode";
+    level = medium ? "medium" : "easy";
+    const playable = medium ? source.decks : source.decks.filter(d => playableEasyDeck(d.id) === d.id);
+    selected = playable.find(d => d.id === (medium ? id : playableEasyDeck(id))) || playable[0];
+    current = medium ? rosters.get(selected.id).medium.cards : {...(drafts.get(selected.id) || selected.cards)};
+    get("progression-title").textContent = cap(level) + " progression";
+    for (const element of [get("pick-card"), get("journey-description"), get("restore-deck").parentElement, get("draft-status").parentElement]) {
+      element.hidden = medium;
+    }
     const stages = new Map();
     for (const d of playable) {
       const key = stageKey(d);
@@ -106,7 +120,7 @@ const journeyAddCard = (() => {
       const active = key === stageKey(selected);
       const d = active ? selected : decks.find(d => d.family === selected.family) || decks[0];
       const link = el("a","route-stop");
-      link.href = "#easy-mode/" + d.id;
+      link.href = "#" + section + "/" + d.id;
       if (active) link.setAttribute("aria-current","step");
       link.append(illustration(d),el("span","",d.title.split(" · ")[0]));
       route.append(link);
@@ -117,10 +131,10 @@ const journeyAddCard = (() => {
     if (group.length > 1) for (const d of group) {
       const b = el("button","chip",FAMILY_NAMES[d.family]);
       b.setAttribute("aria-pressed",d === selected);
-      b.onclick = () => {location.hash = "easy-mode/" + d.id;};
+      b.onclick = () => {location.hash = section + "/" + d.id;};
       variants.append(b);
     }
-    get("journey-stage").textContent = "Easy  /  " + (FAMILY_NAMES[selected.family] || "Mixed families");
+    get("journey-stage").textContent = cap(level) + "  /  " + (FAMILY_NAMES[selected.family] || "Mixed families");
     get("journey-name").textContent = selected.title.split(" · ")[0];
     const activeStop = route.querySelector("[aria-current]");
     if (route.scrollWidth > route.clientWidth) {

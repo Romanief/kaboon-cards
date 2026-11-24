@@ -3,10 +3,10 @@
 <div class="wrap">
   <header>
     <div class="brand"><img src="art/library-rabbit.png" alt=""><h1>Kaboon Cards</h1></div>
-    <nav aria-label="Reference"><a href="#cards">Card library</a><a href="#npc-decks">NPC decks</a><a href="#easy-mode">Easy progression</a></nav>
+    <nav aria-label="Reference"><a href="#cards">Card library</a><a href="#npc-decks">NPC decks</a><a href="#easy-mode">Easy progression</a><a href="#medium-mode">Medium progression</a></nav>
   </header>
-  <section id="easy-mode" hidden aria-label="Easy mode progression">
-    <div class="journey-heading"><h2>Easy progression</h2><div class="journey-actions"><span class="note" id="draft-status" role="status"></span><button id="save-game-decks" class="chip" hidden>Save to game file…</button><button id="export-journey" class="chip" disabled>Export decks</button></div></div>
+  <section id="easy-mode" hidden aria-labelledby="progression-title">
+    <div class="journey-heading"><h2 id="progression-title">Easy progression</h2><div class="journey-actions"><span class="note" id="draft-status" role="status"></span><button id="save-game-decks" class="chip" hidden>Save to game file…</button><button id="export-journey" class="chip" disabled>Export decks</button></div></div>
     <p id="journey-load" role="status">Loading decks…</p>
     <div class="journey-layout" id="journey-layout" hidden>
       <aside class="route"><h3>Encounter route</h3><div id="journey-route"></div></aside>
@@ -50,10 +50,12 @@
 <script>
 function showView() {
   const section = location.hash.slice(1).split("/")[0];
-  const active = ["easy-mode", "npc-decks"].includes(section) ? section : "cards";
+  const active = ["easy-mode", "medium-mode", "npc-decks"].includes(section) ? section : "cards";
+  for (const id of ["cards", "npc-decks", "easy-mode"]) {
+    document.getElementById(id).hidden = id !== (active === "medium-mode" ? "easy-mode" : active);
+  }
   for (const link of document.querySelectorAll("header nav a")) {
     const id = link.hash.slice(1);
-    document.getElementById(id).hidden = id !== active;
     if (id === active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   }
@@ -476,6 +478,6 @@ renderGrid();renderDeck();
 </script>
 <script src="encounters.js?v=20261124-8"></script>
 <script src="npc-browser.js?v=20261124-6"></script>
-<script src="journey.js?v=20261124-7"></script>
+<script src="journey.js?v=20261124-9"></script>
 
 </body></html>
