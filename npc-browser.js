@@ -16,6 +16,7 @@ for (const group of new Set(ENCOUNTERS.map(entry => entry.group))) {
 
 function playableEasyDeck(id = "") {
   if (id.startsWith("intro_")) return "intro_robots";
+  if (id.startsWith("random_1_")) return "random_1_warriors";
   if (id.startsWith("random_2_")) return "random_2_beasts";
   return id;
 }
