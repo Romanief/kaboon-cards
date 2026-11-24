@@ -1,10 +1,25 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kaboon Cards</title><link rel="stylesheet" href="library.css"></head><body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kaboon Cards</title><link rel="stylesheet" href="library.css"><link rel="stylesheet" href="journey.css"></head><body>
 <div class="wrap">
   <header>
     <div class="brand"><img src="art/library-rabbit.png" alt=""><h1>Kaboon Cards</h1></div>
-    <nav aria-label="Reference"><a href="#cards">Card library</a><a href="#npc-decks">NPC decks</a></nav>
+    <nav aria-label="Reference"><a href="#cards">Card library</a><a href="#npc-decks">NPC decks</a><a href="#easy-mode">Easy progression</a></nav>
   </header>
+  <section id="easy-mode" hidden aria-label="Easy mode progression">
+    <div class="journey-heading"><h2>Easy progression</h2><div class="journey-actions"><span class="note" id="draft-status" role="status"></span><button id="save-game-decks" class="chip" hidden>Save to game file…</button><button id="export-journey" class="chip" disabled>Export decks</button></div></div>
+    <p id="journey-load" role="status">Loading decks…</p>
+    <div class="journey-layout" id="journey-layout" hidden>
+      <aside class="route"><h3>Encounter route</h3><div id="journey-route"></div></aside>
+      <div class="journey-work">
+        <div class="journey-banner"><div id="journey-feature" aria-hidden="true"></div><div class="journey-caption"><span id="journey-stage"></span><h2 id="journey-name"></h2><p id="journey-description"></p></div></div>
+        <div id="journey-variants" class="chips" aria-label="Family variant"></div>
+        <div class="journey-tools"><div><h3>Deck contents</h3><span class="note" id="journey-total"></span></div><button class="pri" id="pick-card">＋ Add cards</button></div>
+        <div id="journey-grid"></div>
+        <div class="journey-footer"><span class="note">Edits save in this browser. Export decks to use them in Kaboon.</span><button class="chip" id="restore-deck" disabled>Restore original deck</button></div>
+      </div>
+    </div>
+  </section>
+  <dialog id="journey-picker" aria-labelledby="picker-title"><div class="journey-heading"><h2 id="picker-title">Add cards</h2><button class="x" id="close-picker">Done</button></div><p class="note" id="picker-target"></p><div class="controls"><label>Search cards<input type="search" id="picker-search" placeholder="Name or effect"></label><label>Family<select id="picker-family"></select></label></div><div id="picker-cards"></div></dialog>
   <section id="npc-decks" hidden>
     <h2>NPC decks</h2>
     <div class="controls">
@@ -260,7 +275,7 @@ const CARDS=[
 {"id":"greatoak","n":"Great Oak","d":"trees","t":"unit","r":"common","c":0,"a":3,"h":7,"tok":1,"fx":""},
 {"id":"yggra_summer","n":"Yggra in Summer","d":"trees","t":"unit","r":"legendary","c":0,"a":4,"h":9,"tok":1,"fx":"If undamaged, becomes Autumn (7/12) when you next attack."},
 {"id":"yggra_autumn","n":"Yggra in Autumn","d":"trees","t":"unit","r":"legendary","c":0,"a":7,"h":12,"tok":1,"fx":"Your other Trees got +1/+1 when it arrived."},
-{"id":"breakenchantment","n":"Break Enchantment","d":"warriors","t":"spell","r":"common","c":0,"a":0,"h":0,"tok":0,"fx":"Choose an enemy: remove its bonus attack and health, then deal 2 damage to it."},
+{"id":"breakenchantment","n":"Break Enchantment","d":"warriors","t":"spell","r":"common","c":0,"a":0,"h":0,"tok":0,"fx":"Choose an enemy: remove its bonus attack and health, then deal 1 damage to it."},
 {"id":"borrowedpower","n":"Borrowed Power","d":"fairies","t":"spell","r":"common","c":0,"a":0,"h":0,"tok":0,"fx":"Choose an enemy: take away its bonus attack and health (it keeps 1 health). Your unit in that lane gains up to +3/+3 of it."},
 {"id":"grandmothermarrow","n":"Grandmother Marrow","d":"undead","t":"unit","r":"legendary","c":1,"a":5,"h":7,"tok":0,"fx":"When defeated, gives you a free Polished Bone."},
 {"id":"plaguedoctor","n":"Plague Doctor","d":"undead","t":"unit","r":"epic","c":2,"a":5,"h":7,"tok":0,"fx":"Units it damages lose 1 health at the start of each of their owner's attacks."},
@@ -428,7 +443,8 @@ function openCard(c, source){
     info.append(back);
   }
   info.append(top,sub);
-  const ad=el("button","pri","+ Add to my deck");ad.onclick=()=>{add(c.id);ad.textContent=msg||("In deck: "+deck.filter(i=>i===c.id).length+" · add another")};const wr=el("div");wr.append(ad);if(!c.tok)info.append(wr);
+  const editingJourney = location.hash.startsWith("#easy-mode");
+  const ad=el("button","pri",editingJourney ? "+ Add to this encounter" : "+ Add to my deck");ad.onclick=()=>{if(editingJourney){ad.textContent=journeyAddCard(c.id);return}add(c.id);ad.textContent=msg||("In deck: "+deck.filter(i=>i===c.id).length+" · add another")};const wr=el("div");wr.append(ad);if(!c.tok)info.append(wr);
   h.append(ar,info);w.append(h);
   w.append(el("h3","","Effect"),cardEffect(c,"effect"));
   d.append(w);if (!d.open) d.showModal();
@@ -440,5 +456,6 @@ renderGrid();renderDeck();
 </script>
 <script src="encounters.js"></script>
 <script src="npc-browser.js"></script>
+<script src="journey.js"></script>
 
 </body></html>

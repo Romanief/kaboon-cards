@@ -1,0 +1,353 @@
+{
+  "version": 1,
+  "decks": [
+    {
+      "id": "intro_warriors",
+      "title": "First guest · Knights",
+      "subtitle": "Archers and Squires fill lanes while Heralds look for reinforcements.",
+      "family": "warriors",
+      "cards": {
+        "archer": 4,
+        "squire": 4,
+        "herald": 3,
+        "recruit": 2,
+        "commander": 1,
+        "breakenchantment": 1
+      }
+    },
+    {
+      "id": "intro_beasts",
+      "title": "First guest · Beasts",
+      "subtitle": "Rabbits make room for Wolves. Foragers draw free Beasts while Hedgehogs hold a lane.",
+      "family": "beasts",
+      "cards": {
+        "rabbit": 4,
+        "mouse": 4,
+        "hedgehog": 2,
+        "raccoon": 2,
+        "wolf": 2,
+        "huntinghowl": 1
+      }
+    },
+    {
+      "id": "intro_robots",
+      "title": "First guest · Robots",
+      "subtitle": "Tiny machines feed a pair of Magnet Drones. Treads introduces movement.",
+      "family": "robots",
+      "cards": {
+        "tinbot": 4,
+        "coglet": 4,
+        "bombot": 3,
+        "magnetdrone": 2,
+        "treads": 2
+      }
+    },
+    {
+      "id": "intro_fairies",
+      "title": "First guest · Fairies",
+      "subtitle": "Pucks hold the front while Spellkeepers find Stardust and healing.",
+      "family": "fairies",
+      "cards": {
+        "puck": 6,
+        "spellkeeper": 2,
+        "echowisp": 2,
+        "stardust": 2,
+        "moonwell": 2,
+        "glimmer": 1
+      }
+    },
+    {
+      "id": "cogsworth",
+      "title": "Cogsworth",
+      "subtitle": "Coglets return to the deck after sacrifice. A Linked Reactor gives them a bigger machine to power.",
+      "family": "robots",
+      "cards": {
+        "tinbot": 4,
+        "coglet": 4,
+        "bombot": 2,
+        "magnetdrone": 2,
+        "linkedreactor": 1,
+        "repairkit": 1,
+        "treads": 1
+      }
+    },
+    {
+      "id": "oren",
+      "title": "Oren",
+      "subtitle": "Four Archers, four Heralds and three Squires support two Commanders. Break Enchantment answers a buffed unit.",
+      "family": "warriors",
+      "cards": {
+        "archer": 4,
+        "breakenchantment": 2,
+        "herald": 4,
+        "squire": 3,
+        "commander": 2
+      }
+    },
+    {
+      "id": "fenwick",
+      "title": "Fenwick",
+      "subtitle": "Turning Current shifts the lanes. Watch for Lantern Angler drawing another Fish behind the small swimmers.",
+      "family": "fishes",
+      "cards": {
+        "minnow": 4,
+        "sardine": 3,
+        "hermitcrab": 2,
+        "pondcarp": 2,
+        "tide": 2,
+        "crab": 1,
+        "angler": 1
+      }
+    },
+    {
+      "id": "random_1_warriors",
+      "title": "First travelling guest · Knights",
+      "subtitle": "Pages threaten promotion and a Standard Bearer reinforces the familiar Knight line.",
+      "family": "warriors",
+      "cards": {
+        "squire": 3,
+        "archer": 2,
+        "herald": 2,
+        "page": 2,
+        "recruit": 1,
+        "commander": 1,
+        "standardbearer": 1,
+        "swordsman": 2,
+        "wardrum": 1
+      }
+    },
+    {
+      "id": "random_1_beasts",
+      "title": "First travelling guest · Beasts",
+      "subtitle": "Foxes join the Rabbits, while Foragers and a Burrow Warden draw free Beasts.",
+      "family": "beasts",
+      "cards": {
+        "rabbit": 3,
+        "mouse": 2,
+        "raccoon": 2,
+        "wolf": 2,
+        "fox": 2,
+        "burrowwarden": 1,
+        "boar": 2,
+        "huntinghowl": 1
+      }
+    },
+    {
+      "id": "random_1_robots",
+      "title": "First travelling guest · Robots",
+      "subtitle": "Sparkers add immediate attack. Repair Kit helps the larger machines stay in play.",
+      "family": "robots",
+      "cards": {
+        "tinbot": 2,
+        "coglet": 3,
+        "bombot": 2,
+        "magnetdrone": 2,
+        "sparker": 2,
+        "linkedreactor": 1,
+        "repairkit": 1,
+        "repairbot": 2
+      }
+    },
+    {
+      "id": "random_1_fairies",
+      "title": "First travelling guest · Fairies",
+      "subtitle": "Mirror Sprites and Pixie Tricksters disrupt lanes while Spellkeepers keep spells in hand.",
+      "family": "fairies",
+      "cards": {
+        "puck": 3,
+        "mirrorsprite": 2,
+        "pixietrickster": 3,
+        "spellkeeper": 2,
+        "echowisp": 2,
+        "stardust": 2,
+        "moonwell": 1
+      }
+    },
+    {
+      "id": "random_2_warriors",
+      "title": "Second travelling guest · Knights",
+      "subtitle": "A Knight joins the Pages. War Drum and Standard Bearer reward building a board.",
+      "family": "warriors",
+      "cards": {
+        "squire": 2,
+        "archer": 3,
+        "herald": 2,
+        "page": 2,
+        "swordsman": 1,
+        "knight": 1,
+        "recruit": 1,
+        "standardbearer": 1,
+        "commander": 1,
+        "wardrum": 1
+      }
+    },
+    {
+      "id": "random_2_beasts",
+      "title": "Second travelling guest · Beasts",
+      "subtitle": "An Eagle threatens direct damage while Foragers and Burrow Warden replenish the hand.",
+      "family": "beasts",
+      "cards": {
+        "rabbit": 3,
+        "mouse": 2,
+        "raccoon": 2,
+        "wolf": 2,
+        "hedgehog": 1,
+        "boar": 1,
+        "fox": 1,
+        "squirrel": 1,
+        "burrowwarden": 1,
+        "eagle": 1
+      }
+    },
+    {
+      "id": "random_2_robots",
+      "title": "Second travelling guest · Robots",
+      "subtitle": "Repair Bots and Repair Kit support the shift from small machines to Rivet.",
+      "family": "robots",
+      "cards": {
+        "tinbot": 2,
+        "coglet": 3,
+        "bombot": 2,
+        "sparker": 2,
+        "repairbot": 1,
+        "magnetdrone": 2,
+        "linkedreactor": 1,
+        "rivet": 1,
+        "repairkit": 1
+      }
+    },
+    {
+      "id": "random_2_fairies",
+      "title": "Second travelling guest · Fairies",
+      "subtitle": "Pixie Tricksters swap opposing units. Sprite can hit a second enemy beside its target.",
+      "family": "fairies",
+      "cards": {
+        "puck": 3,
+        "mirrorsprite": 2,
+        "pixietrickster": 2,
+        "sprite": 1,
+        "spellkeeper": 2,
+        "echowisp": 2,
+        "stardust": 2,
+        "glimmer": 1
+      }
+    },
+    {
+      "id": "aster",
+      "title": "Aster",
+      "subtitle": "Prism Reader and Moon Archivist fetch spells. Look for Sprite before deciding which lane to defend.",
+      "family": "fairies",
+      "cards": {
+        "puck": 5,
+        "sprite": 1,
+        "spellkeeper": 2,
+        "echowisp": 2,
+        "prismreader": 1,
+        "moonarchivist": 1,
+        "stardust": 2,
+        "moonwell": 1
+      }
+    },
+    {
+      "id": "rowan",
+      "title": "Sir Rowan",
+      "subtitle": "Oren’s Heralds return alongside Pages. Oath Marshal and Oath Avenger give the Knight line two heavier threats.",
+      "family": "warriors",
+      "cards": {
+        "squire": 1,
+        "archer": 2,
+        "herald": 2,
+        "page": 2,
+        "swordsman": 1,
+        "recruit": 1,
+        "standardbearer": 1,
+        "knight": 1,
+        "shieldbearer": 1,
+        "oathmarshal": 1,
+        "oathavenger": 1,
+        "breakenchantment": 1
+      }
+    },
+    {
+      "id": "vesper",
+      "title": "Vesper",
+      "subtitle": "Loosebone Scouts leave Bones to spend. Ossuary and Banshee support the second wave.",
+      "family": "undead",
+      "cards": {
+        "zombie": 3,
+        "rattlebones": 2,
+        "skeleton": 2,
+        "restlessrat": 1,
+        "silentmourner": 1,
+        "coffinbearer": 1,
+        "ghoul": 1,
+        "necromancer": 1,
+        "banshee": 1,
+        "ossuary": 1,
+        "bone": 1
+      }
+    },
+    {
+      "id": "alder",
+      "title": "Alder",
+      "subtitle": "Berry Bush and Orchard Keeper supply Sunfruit, while quills make some lanes expensive to attack.",
+      "family": "trees",
+      "cards": {
+        "daisy": 2,
+        "fern": 2,
+        "berrybush": 2,
+        "puffcap": 1,
+        "vine": 1,
+        "nettle": 1,
+        "briarhound": 1,
+        "acorn": 1,
+        "appletree": 1,
+        "fruit": 1,
+        "grafter": 1,
+        "seedspreaderdryad": 1
+      }
+    },
+    {
+      "id": "bramble",
+      "title": "Bramble",
+      "subtitle": "Den Matron draws free Beasts. Elder of the Grove heals the pack. Wild Grove rewards leaving several Beasts standing.",
+      "family": "beasts",
+      "cards": {
+        "rabbit": 1,
+        "mouse": 2,
+        "raccoon": 2,
+        "hedgehog": 1,
+        "wolf": 2,
+        "fox": 2,
+        "burrowwarden": 1,
+        "boar": 1,
+        "denmatron": 1,
+        "elderstag": 1,
+        "wildgrove": 1
+      }
+    },
+    {
+      "id": "final_bram",
+      "title": "Bram",
+      "subtitle": "All eight families meet at the final table. Dawn Squire can promote while Sprite and Linked Reactor bring back threats from earlier duels.",
+      "family": "mixed",
+      "cards": {
+        "boar": 1,
+        "zombie": 1,
+        "berrybush": 1,
+        "cinderling": 1,
+        "tinbot": 1,
+        "sparker": 1,
+        "puck": 1,
+        "sprite": 1,
+        "stardust": 1,
+        "repairkit": 1,
+        "dawnsquire": 1,
+        "currentrider": 1,
+        "linkedreactor": 1,
+        "swordsman": 1,
+        "seaurchin": 1
+      }
+    }
+  ]
+}

@@ -40,6 +40,11 @@ function showRoster() {
     cap(levelSelect.value), FAMILY_NAMES[entry.family] || "Mixed families",
     total + " cards", roster.hand + " in opening hand"
   ].join(" · ")));
+  if (levelSelect.value === "easy" && entry.easyDeck) {
+    const edit = el("a", "chip", "Edit this Easy deck →");
+    edit.href = "#easy-mode/" + entry.easyDeck;
+    host.append(edit);
+  }
   if (entry.stages) host.append(el("p", "note", "Deck preview at this point in the story. Each guest has their own requirement for accepting a challenge."));
   if (roster.board.length) {
     host.append(el("p", "note", "Already on the table: " +
@@ -66,8 +71,9 @@ function showRoster() {
 }
 
 function showView() {
-  const active = location.hash === "#npc-decks" ? "npc-decks" : "cards";
-  for (const link of document.querySelectorAll("nav a")) {
+  const section = location.hash.slice(1).split("/")[0];
+  const active = ["easy-mode", "npc-decks"].includes(section) ? section : "cards";
+  for (const link of document.querySelectorAll("header nav a")) {
     const id = link.hash.slice(1);
     document.getElementById(id).hidden = id !== active;
     if (id === active) link.setAttribute("aria-current", "page");
