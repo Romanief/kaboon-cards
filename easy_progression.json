@@ -251,7 +251,6 @@
       "subtitle": "Oren’s Heralds return alongside Pages. Oath Marshal and Oath Avenger give the Knight line two heavier threats.",
       "family": "warriors",
       "cards": {
-        "squire": 1,
         "archer": 2,
         "herald": 2,
         "page": 2,
@@ -262,7 +261,8 @@
         "shieldbearer": 1,
         "oathmarshal": 1,
         "oathavenger": 1,
-        "breakenchantment": 1
+        "breakenchantment": 1,
+        "dawnsquire": 1
       }
     },
     {
