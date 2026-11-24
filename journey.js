@@ -4,9 +4,10 @@ const journeyAddCard = (() => {
   const storageKey = id => "kaboon.easy.deck.v1." + id;
   const size = cards => Object.values(cards).reduce((a, b) => a + b, 0);
   const stageKey = deck => deck.id.replace(/_(warriors|beasts|robots|fairies)$/, "");
-  const feature = {cogsworth:"linkedreactor", oren:"commander", fenwick:"angler", aster:"moonarchivist",
+  const feature = {cogsworth:"shieldprojector", oren:"commander", fenwick:"angler", aster:"moonarchivist",
     rowan:"oathmarshal", vesper:"banshee", alder:"appletree", bramble:"denmatron", final_bram:"dawnsquire"};
   const illustration = d => art(byId[feature[d.id] || Object.keys(d.cards)[0]]);
+  const openings = new Map(ENCOUNTERS.filter(e => e.easyDeck).map(e => [e.easyDeck, e.levels.easy.hand]));
   let source, selected, current = {}, drafts = new Map();
 
   function validCounts(value) {
@@ -72,7 +73,7 @@ const journeyAddCard = (() => {
     let units = 0;
     for (const [id,qty] of Object.entries(current)) if (byId[id].t === "unit") units += qty;
     get("journey-total").textContent = count + " cards · " + units + " units · " + (count-units) +
-      " support" + (count < 10 ? " · Add " + (10-count) + " to export" : "");
+      " support · " + openings.get(selected.id) + " in opening hand" + (count < 10 ? " · Add " + (10-count) + " to export" : "");
     get("journey-description").textContent = changed() ? "Original deck · " + selected.subtitle : selected.subtitle;
     get("restore-deck").disabled = !changed();
     get("journey-grid").replaceChildren(...Object.keys(current).map(id => tile(byId[id],false)));
@@ -88,10 +89,11 @@ const journeyAddCard = (() => {
   }
   function select() {
     if (!source || !location.hash.startsWith("#easy-mode")) return;
-    selected = source.decks.find(d => d.id === location.hash.split("/")[1]) || source.decks[0];
+    const playable = source.decks.filter(d => playableEasyDeck(d.id) === d.id);
+    selected = playable.find(d => d.id === playableEasyDeck(location.hash.split("/")[1])) || playable[0];
     current = {...(drafts.get(selected.id) || selected.cards)};
     const stages = new Map();
-    for (const d of source.decks) {
+    for (const d of playable) {
       const key = stageKey(d);
       if (!stages.has(key)) stages.set(key, []);
       stages.get(key).push(d);
@@ -188,7 +190,7 @@ const journeyAddCard = (() => {
   };
   async function load() {
     try {
-      const response = await fetch("easy_progression.json");
+      const response = await fetch("easy_progression.json?v=20261124-3");
       if (!response.ok) throw Error(response.status);
       source = await response.json();
       for (const d of source.decks) {

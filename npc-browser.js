@@ -14,13 +14,21 @@ for (const group of new Set(ENCOUNTERS.map(entry => entry.group))) {
   groupSelect.add(new Option(group));
 }
 
+function playableEasyDeck(id = "") {
+  if (id.startsWith("intro_")) return "intro_robots";
+  if (id.startsWith("random_2_")) return "random_2_beasts";
+  return id;
+}
+
 function showOpponents() {
+  const previous = opponentSelect.value;
   opponentSelect.replaceChildren();
   ENCOUNTERS.forEach((entry, index) => {
-    if (entry.group === groupSelect.value) {
+    if (entry.group === groupSelect.value && (levelSelect.value !== "easy" || !entry.easyDeck || playableEasyDeck(entry.easyDeck) === entry.easyDeck)) {
       opponentSelect.add(new Option(entry.name, index));
     }
   });
+  if ([...opponentSelect.options].some(option => option.value === previous)) opponentSelect.value = previous;
   showRoster();
 }
 
@@ -71,7 +79,7 @@ function showRoster() {
 }
 
 stageSelect.onchange = showRoster;
-levelSelect.onchange = showRoster;
+levelSelect.onchange = showOpponents;
 groupSelect.onchange = showOpponents;
 opponentSelect.onchange = showRoster;
 showOpponents();
