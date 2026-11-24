@@ -70,21 +70,8 @@ function showRoster() {
   host.append(list);
 }
 
-function showView() {
-  const section = location.hash.slice(1).split("/")[0];
-  const active = ["easy-mode", "npc-decks"].includes(section) ? section : "cards";
-  for (const link of document.querySelectorAll("header nav a")) {
-    const id = link.hash.slice(1);
-    document.getElementById(id).hidden = id !== active;
-    if (id === active) link.setAttribute("aria-current", "page");
-    else link.removeAttribute("aria-current");
-  }
-}
-
 stageSelect.onchange = showRoster;
 levelSelect.onchange = showRoster;
 groupSelect.onchange = showOpponents;
 opponentSelect.onchange = showRoster;
-window.addEventListener("hashchange", showView);
 showOpponents();
-showView();

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kaboon Cards</title><link rel="stylesheet" href="library.css"><link rel="stylesheet" href="journey.css"></head><body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kaboon Cards</title><link rel="stylesheet" href="library.css"><link rel="stylesheet" href="journey.css?v=20261124-2"></head><body>
 <div class="wrap">
   <header>
     <div class="brand"><img src="art/library-rabbit.png" alt=""><h1>Kaboon Cards</h1></div>
@@ -47,6 +47,20 @@
   </div>
 </div>
 <dialog id="dlg" aria-labelledby="card-name"></dialog>
+<script>
+function showView() {
+  const section = location.hash.slice(1).split("/")[0];
+  const active = ["easy-mode", "npc-decks"].includes(section) ? section : "cards";
+  for (const link of document.querySelectorAll("header nav a")) {
+    const id = link.hash.slice(1);
+    document.getElementById(id).hidden = id !== active;
+    if (id === active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
+}
+window.addEventListener("hashchange", showView);
+showView();
+</script>
 <script>
 const CARDS=[
 {"id":"squire","n":"Squire","d":"warriors","t":"unit","r":"common","c":0,"a":1,"h":2,"tok":0,"fx":""},
@@ -454,8 +468,8 @@ document.getElementById("dlg").addEventListener("click",e=>{if(e.target.id==="dl
 document.getElementById("scope").onchange=renderGrid;
 renderGrid();renderDeck();
 </script>
-<script src="encounters.js"></script>
-<script src="npc-browser.js"></script>
-<script src="journey.js"></script>
+<script src="encounters.js?v=20261124-2"></script>
+<script src="npc-browser.js?v=20261124-2"></script>
+<script src="journey.js?v=20261124-2"></script>
 
 </body></html>
